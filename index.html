@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f3f3f3;
+  }
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 20px;
+  }
+  .image-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  .image-container img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    transition: transform 0.3s ease;
+    object-fit: cover; 
+  }
+  .image-container:hover img {
+    transform: scale(1.1);
+  }
+  .image-container .name-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .image-container:hover .name-overlay {
+    opacity: 1;
+  }
+  .title{
+    font-size: xx-large;
+    font-weight: bold;
+    padding-bottom: 50px;
+    text-align: center;
+    text-decoration: underline;
+    
+    }
+.title:hover{
+    text-shadow: 2px 2px #12202b;
+    opacity: 0.4;
+}
+</style>
+</head>
+<body>
+<div class="title">Choose Your Favourite Psychiatrist</div>
+<div class="container" id="image-container"></div>
+
+<script>
+  var imageData = [
+    {"name": "Alfred Adler", "image": "https://www.verywellmind.com/thmb/Eyx80MV4uytA0j-qip9C4rK3eMs=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/GettyImages-2634499-15394a59b696466abefb4337a51935b9.jpg"},
+    {"name": "Alfred Binet", "image": "https://www.verywellmind.com/thmb/9w6cg4OPQAK_0h7HJTYu1CGPNIU=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/Alfred_Binet-58ff56db3df78ca1591ec6d0.jpg"},
+    {"name": "Erik Erikson","image": "https://www.verywellmind.com/thmb/o4j2bjwISkHp4_r1zdz8fUt0IjI=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/child-psychologist-erikson-576840280-59d3e63bc412440010edd644.jpg"},
+    {"name": "G. Stanley Hall","image": "https://www.verywellmind.com/thmb/NPQ2LrC-t6R16GLhgE14Wo0S9JE=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/GettyImages-3274654-58da6c385f9b58468313e599.jpg"},
+    {"name": "Karen Horney","image": "https://www.verywellmind.com/thmb/ltjewcB_oAP6MEuTn0qLB33Yow4=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/G._Stanley_Hall-59037f335f9b5810dc1b7846.jpg"},
+    {"name": "William James","image": "https://www.verywellmind.com/thmb/n_V2EPRyfKgmoQ-J3C68Mp2FH8I=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/karenhorney-5a550f0a9e94270036481e3e.jpg"},
+    {"name": "Carl Jung","image": "https://www.verywellmind.com/thmb/RJMAhmxRMqpjPrgf74Crtvtz6vg=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/William_James_b1842c-590385d45f9b5810dc1bb44f.jpg"},
+    {"name": "Abraham Maslow","image": "https://www.verywellmind.com/thmb/X0Ahbif9eNY-HQzN1sociK6yuy8=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/GettyImages-503048771-569274d25f9b58eba48f77be.jpg"},
+    {"name": "Hugo Munsterberg","image": "https://www.verywellmind.com/thmb/20AR0YDQ5BuxVAwsTCYybVpVOzQ=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/abraham-harold-maslow--psychologist-517324528-59c14378845b340011247ba2.jpg"},
+    {"name": "Ivan Pavlov","image": "https://www.verywellmind.com/thmb/ggO2aYem08hUlN3SsmtbPx9tHkQ=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/binary-5711afb83df78c3fa21139cd.jpg"},
+    {"name": "Jean Piaget","image": "https://www.verywellmind.com/thmb/qAMvSKuz3sou3H1FMQJWJW4mGMo=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/pavlov-5b42e777c9e77c0037fb1a21.jpg"},
+    {"name": "Carl Rogers","image": "https://www.verywellmind.com/thmb/yaKZHd4t1Qr0Mgpw2b8pnMXxRow=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/JeanPiaget-56a792345f9b58b7d0ebc7dc.jpg"},
+    {"name": "B. F. Skinner","image": "https://www.verywellmind.com/thmb/uKfOjia6w9s7DMRDjDBI8fRcsx0=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/humanistic-psychologist-carl-ransom-rogers-515301772-583f04983df78c6f6a9d1091.jpg"},
+    {"name": "Wilhelm Wundt","image": "https://www.verywellmind.com/thmb/Lj7Xpus2goNxidnJJaoyX7RC-4c=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/bf-skinner-56a792c95f9b58b7d0ebd009.jpg"},
+    {"name": "Sigmund Freud","image": "https://www.verywellmind.com/thmb/zSD-udLH2BusOVAyoCrzkJc1ukM=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/wilhelm-wundt-515301540-57719aa45f9b585875f06e7b.jpg"},
+    {"name": "B-F-Skinner","image": "https://practicalpie.com/wp-content/uploads/2020/06/B-F-Skinner.jpg"},
+    {"name": "Ivan-Pavlov","image": "https://practicalpie.com/wp-content/uploads/2020/09/Ivan-Pavlov-1024x666.jpg"},
+    {"name": "John-B-Watson","image": "https://practicalpie.com/wp-content/uploads/2020/04/John-B-Watson.jpg"},
+    {"name": "Daniel-Kahneman","image": "https://practicalpie.com/wp-content/uploads/2020/06/Daniel-Kahneman.jpg"},
+    {"name": "Elizabeth-Loftus","image": "https://practicalpie.com/wp-content/uploads/2020/04/Elizabeth-Loftus.jpg"},
+    {"name": "Ulric-Neisser","image": "https://practicalpie.com/wp-content/uploads/2021/03/Ulric-Neisser.jpg"},
+    {"name": "George-Kelly","image": "https://practicalpie.com/wp-content/uploads/2021/03/George-Kelly.jpg"},
+    {"name": "Erik-Erikson","image": "https://practicalpie.com/wp-content/uploads/2020/04/Erik-Erikson.jpg"},
+    {"name": "Konrad-Lorenz","image": "https://practicalpie.com/wp-content/uploads/2020/07/30-Konrad-Lorenz.jpg"},
+    {"name": "Lev-Vigowski","image": "https://practicalpie.com/wp-content/uploads/2020/06/Lev-V%C3%AEgotski.jpg"},
+    {"name": "Urie-Bronfenbrenner","image": "https://practicalpie.com/wp-content/uploads/2021/03/08-Urie-Bronfenbrenner.jpg"},
+    
+  ];
+
+  function loadImages() {
+    var container = document.getElementById('image-container');
+    imageData.forEach(function(item) {
+      var imageContainer = document.createElement('div');
+      imageContainer.classList.add('image-container');
+      
+      var img = document.createElement('img');
+      img.src = item.image;
+      
+      var nameOverlay = document.createElement('div');
+      nameOverlay.classList.add('name-overlay');
+      nameOverlay.textContent = item.name;
+      
+      imageContainer.appendChild(img);
+      imageContainer.appendChild(nameOverlay);
+      container.appendChild(imageContainer);
+    });
+  }
+
+  loadImages();
+</script>
+
+</body>
+</html>
